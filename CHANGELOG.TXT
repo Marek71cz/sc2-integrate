@@ -1,0 +1,2 @@
+0.1
+First test version - only adds SC2 logo to CSFD page, no real functionality!
