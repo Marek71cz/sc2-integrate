@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name SC2-integrate
 // @license MIT
-// @version 0.1
+// @version 0.2
 // @description Integrace SC2 do CSFD. IMDB a TRAKT.TV v planu.
 // @match https://www.csfd.cz/film/*
 // @match https://www.imdb.com/title/*
