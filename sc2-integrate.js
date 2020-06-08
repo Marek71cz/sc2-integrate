@@ -11,7 +11,7 @@
 function sc2Integrate() {
 
     const href = window.location.href;
-    console.log('[SC2] href =  %o', href);
+    const sc2Src = 'https://forum.sc2.zone/assets/logo-2i7unhce.png';
     
     var indexStart = -1;
     var indexEnd = -1;
@@ -30,7 +30,7 @@ function sc2Integrate() {
         childEl = parentEl.childNodes[1];
 
         sc2 = document.createElement('img');
-        sc2.src = 'https://forum.sc2.zone/assets/logo-2i7unhce.png';
+        sc2.src = sc2Src;
         sc2.title = 'Media info by SC2 API...';
         sc2.setAttribute('width', '173px');
         sc2.setAttribute('style', 'margin-top: 8px; margin-bottom: 8px;');
@@ -49,7 +49,7 @@ function sc2Integrate() {
         parentEl = document.getElementsByClassName('uc-add-wl-button uc-add-wl--not-in-wl uc-add-wl')[0];
         childEl = parentEl.childNodes[0];
         sc2 = document.createElement('img');
-        sc2.src = 'https://forum.sc2.zone/assets/logo-2i7unhce.png';
+        sc2.src = sc2Src;
         sc2.title = 'Media info by SC2 API...';
         sc2.setAttribute('style', 'margin-left: 16px; margin-bottom: 22px;');
         
@@ -69,7 +69,7 @@ function sc2Integrate() {
         parentEl = document.getElementById("poster");     
         childEl = document.getElementById("show-all-posters");     
         sc2 = document.createElement('img');
-        sc2.src = 'https://forum.sc2.zone/assets/logo-2i7unhce.png';
+        sc2.src = sc2Src;
         sc2.title = 'Media info by SC2 API...';
         br = document.createElement('br');
         
