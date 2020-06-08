@@ -31,6 +31,7 @@ function sc2Integrate() {
 
         sc2 = document.createElement('img');
         sc2.src = 'https://forum.sc2.zone/assets/logo-2i7unhce.png';
+        sc2.title = 'Media info by SC2 API...';
         sc2.setAttribute('width', '173px');
         sc2.setAttribute('style', 'margin-top: 8px; margin-bottom: 8px;');
         
@@ -49,6 +50,7 @@ function sc2Integrate() {
         childEl = parentEl.childNodes[0];
         sc2 = document.createElement('img');
         sc2.src = 'https://forum.sc2.zone/assets/logo-2i7unhce.png';
+        sc2.title = 'Media info by SC2 API...';
         sc2.setAttribute('style', 'margin-left: 16px; margin-bottom: 22px;');
         
         parentEl.insertBefore(sc2, childEl);
@@ -68,6 +70,7 @@ function sc2Integrate() {
         childEl = document.getElementById("show-all-posters");     
         sc2 = document.createElement('img');
         sc2.src = 'https://forum.sc2.zone/assets/logo-2i7unhce.png';
+        sc2.title = 'Media info by SC2 API...';
         br = document.createElement('br');
         
         parentEl.insertBefore(sc2, childEl);
