@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name SC2-integrate
 // @license MIT
-// @version 0.2
+// @version 0.3
 // @description Integrace SC2 do CSFD, IMDB a TRAKT.TV.
 // @match https://www.csfd.cz/film/*
 // @match https://www.imdb.com/title/*
@@ -9,17 +9,76 @@
 // @match https://trakt.tv/movies/*
 // ==/UserScript==
 
-function sc2Integrate() {
+const href = window.location.href;
 
-    const href = window.location.href;
-    const sc2Src = 'https://forum.sc2.zone/assets/logo-2i7unhce.png';
-    
-    var indexStart = -1;
-    var indexEnd = -1;
-    var parentEl;
-    var childEl;
-    var sc2;
-    var br;
+// ToDo: it is white
+const sc2logoGrey = 'https://db.sc2.zone/assets/images/logo.png';
+// ToDo: it is blue
+const sc2logoBlue = 'https://forum.sc2.zone/assets/logo-2i7unhce.png';
+const sc2logoRed  = 'https://forum.sc2.zone/assets/logo-2i7unhce.png';
+
+
+var indexStart = -1;
+var indexEnd = -1;
+var parentEl;
+var childEl;
+var sc2;
+var sc2src;
+
+var br;
+
+// Inserts newly created node after the node - this is not standart function
+function insertAfter(newNode, referenceNode) {
+    referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+}
+
+// ToDo:
+function checkMedia(service, search) {
+    if(service == 'csfd') {
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "https://plugin.sc2.zone/api/db/validate/media", true);
+        xhttp.setRequestHeader("content-type", "application/json");
+        xhttp.setRequestHeader("accept", "application/json");
+        xhttp.send(JSON.stringify(search));
+        // xhttp.send();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                console.log('[SC2: CSFD response status %o]', this.status);
+                // parse response...
+                
+                // get rating
+                var ratingNode = document.getElementsByClassName('average')[0];
+                console.log('[SC2: CSFD rating node %o]', ratingNode);
+                var ratingText = ratingNode.innerHTML;
+                var rating = parseInt(ratingText.substring(0, ratingText.indexOf("%")));
+                if(rating < 25) {
+                    sc2src = sc2logoGrey;
+                } else if(rating < 75) {
+                    sc2src = sc2logoBlue;
+                } else {
+                    sc2src = sc2logoRed;
+                }
+                console.log('[SC2: CSFD rating %o]', rating);
+                
+                sc2 = document.createElement('img');
+                sc2.src = sc2src;
+                sc2.setAttribute('width', '128px');
+                sc2.title = 'Media info by SC2 API...';
+                br = document.createElement('br');
+                
+                posterImg = document.getElementsByClassName('film-poster')[0];
+                insertAfter(sc2, posterImg);
+                insertAfter(br, posterImg);
+            }
+        };
+        
+    } else {
+        return;
+    }
+}
+
+
+function sc2Integrate() {
 
     if (href.indexOf('csfd.cz/film/') > 0) {
         // csfd.cz
@@ -33,14 +92,17 @@ function sc2Integrate() {
             // This means we are in TV show or episodes view
             // check CSFD ID, whether movie (TV Show) exists in SC2 database
             // if yes - dipslay SC2 logo
-            childEl = document.getElementById("show-all-posters");     
-            sc2 = document.createElement('img');
-            sc2.src = sc2Src;
-            sc2.title = 'Media info by SC2 API...';
-            br = document.createElement('br');
+
+            // Only temporary, real check is for csfd id
+            var title = href.substring(href.indexOf('-')+1);
+            title = title.substring(0, title.indexOf('/')).replace(/-/g,' ');
+            var csfdSearch = [csfdId];// "[\"" + csfdId + "\"]}";
+            console.log('[SC2: CSFD ID %o]', csfdId);   
+            console.log('[SC2: CSFD search %o]', csfdSearch);
             
-            parentEl.insertBefore(sc2, childEl);
-            parentEl.insertBefore(br, childEl);
+            checkMedia('csfd', csfdSearch);
+            // console.log('[SC2: CSFD status %o]', status);   
+            
         }
         
     } else if (href.indexOf('imdb.com') >0) {
@@ -56,9 +118,10 @@ function sc2Integrate() {
             // if yes - dipslay SC2 logo
             childEl = parentEl.childNodes[0];
             sc2 = document.createElement('img');
-            sc2.src = sc2Src;
+            sc2.src = sc2logoBlue;
+            sc2.setAttribute('height', '48px');
             sc2.title = 'Media info by SC2 API...';
-            sc2.setAttribute('style', 'margin-left: 16px; margin-bottom: 22px;');
+            sc2.setAttribute('style', 'margin-left: 16px; margin-bottom: 12px;');
             
             parentEl.insertBefore(sc2, childEl);
         }
@@ -85,7 +148,7 @@ function sc2Integrate() {
             childEl = parentEl.childNodes[1];
     
             sc2 = document.createElement('img');
-            sc2.src = sc2Src;
+            sc2.src = sc2logoBlue;
             sc2.title = 'Media info by SC2 API...';
             sc2.setAttribute('width', '173px');
             sc2.setAttribute('style', 'margin-top: 8px; margin-bottom: 8px;');

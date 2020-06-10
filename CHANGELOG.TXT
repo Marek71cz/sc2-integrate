@@ -1,3 +1,8 @@
+0.3
+Added basic check, not finished yet
+Modified SC2 logo for CSFD - logo color depending on rating
+code changes
+
 0.2
 Added IMDB and TRAKT integration, still no functionality!
 Changes due to movies, seasons and episodes pages differences.
