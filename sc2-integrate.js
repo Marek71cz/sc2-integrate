@@ -50,7 +50,7 @@ function checkMedia(service, id) {
                 var rating = parseInt(ratingText.substring(0, ratingText.indexOf("%")));
                 if(rating < 25) {
                     sc2src = sc2logoGrey;
-                } else if(rating < 75) {
+                } else if(rating < 70) {
                     sc2src = sc2logoBlue;
                 } else {
                     sc2src = sc2logoRed;
