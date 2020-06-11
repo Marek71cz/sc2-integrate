@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name SC2-integrate
 // @license MIT
-// @version 0.3
+// @version 0.5
 // @description Integrace SC2 do CSFD, IMDB a TRAKT.TV.
 // @match https://www.csfd.cz/film/*
 // @match https://www.imdb.com/title/*
@@ -11,11 +11,10 @@
 
 const href = window.location.href;
 
-// ToDo: it is white
-const sc2logoGrey = 'https://db.sc2.zone/assets/images/logo.png';
-// ToDo: it is blue
-const sc2logoBlue = 'https://forum.sc2.zone/assets/logo-2i7unhce.png';
-const sc2logoRed  = 'https://forum.sc2.zone/assets/logo-2i7unhce.png';
+// ToDo:
+const sc2logoGrey = "https://i.ibb.co/n8xbr06/logo-seda.png"; //'https://db.sc2.zone/assets/images/logo.png';
+const sc2logoBlue = "https://i.ibb.co/P6SKgmR/logo-modra.png"; //'https://forum.sc2.zone/assets/logo-2i7unhce.png';
+const sc2logoRed  = "https://i.ibb.co/G28dXpW/logo-cervena.png"; //'https://forum.sc2.zone/assets/logo-2i7unhce.png';
 
 
 var indexStart = -1;
@@ -33,23 +32,21 @@ function insertAfter(newNode, referenceNode) {
 }
 
 // ToDo:
-function checkMedia(service, search) {
+function checkMedia(service, id) {
     if(service == 'csfd') {
         var xhttp = new XMLHttpRequest();
-        xhttp.open("POST", "https://plugin.sc2.zone/api/db/validate/media", true);
-        xhttp.setRequestHeader("content-type", "application/json");
-        xhttp.setRequestHeader("accept", "application/json");
-        xhttp.send(JSON.stringify(search));
-        // xhttp.send();
+        xhttp.open("GET", "https://plugin.sc2.zone/api/media/detail/service/" + service + "/" + id, true);
+        // xhttp.setRequestHeader("content-type", "application/json");
+        // xhttp.setRequestHeader("accept", "application/json");
+        // xhttp.send(JSON.stringify(search));
+        xhttp.send();
         xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
+            if (this.readyState == 4 && this.status == 200) { 
                 console.log('[SC2: CSFD response status %o]', this.status);
                 // parse response...
                 
                 // get rating
-                var ratingNode = document.getElementsByClassName('average')[0];
-                console.log('[SC2: CSFD rating node %o]', ratingNode);
-                var ratingText = ratingNode.innerHTML;
+                var ratingText = document.getElementsByClassName('average')[0].innerHTML;
                 var rating = parseInt(ratingText.substring(0, ratingText.indexOf("%")));
                 if(rating < 25) {
                     sc2src = sc2logoGrey;
@@ -58,15 +55,15 @@ function checkMedia(service, search) {
                 } else {
                     sc2src = sc2logoRed;
                 }
-                console.log('[SC2: CSFD rating %o]', rating);
                 
                 sc2 = document.createElement('img');
                 sc2.src = sc2src;
                 sc2.setAttribute('width', '128px');
+                // ToDo: Set some media info
                 sc2.title = 'Media info by SC2 API...';
                 br = document.createElement('br');
                 
-                posterImg = document.getElementsByClassName('film-poster')[0];
+                var posterImg = document.getElementsByClassName('film-poster')[0];
                 insertAfter(sc2, posterImg);
                 insertAfter(br, posterImg);
             }
@@ -82,26 +79,24 @@ function sc2Integrate() {
 
     if (href.indexOf('csfd.cz/film/') > 0) {
         // csfd.cz
-        indexStart = href.indexOf('film/') + 5;
-        indexEnd = href.indexOf('-');
-        var csfdId = href.substring(indexStart, indexEnd);
-        console.log('[SC2: CSFD id %o]', csfdId);
-        
         parentEl = document.getElementById("poster"); 
         if (parentEl) {
+            indexStart = href.indexOf('film/') + 5;
+            indexEnd = href.indexOf('-');
+            var csfdId = href.substring(indexStart, indexEnd);
+            console.log('[SC2: CSFD id %o]', csfdId);
+        
             // This means we are in TV show or episodes view
             // check CSFD ID, whether movie (TV Show) exists in SC2 database
             // if yes - dipslay SC2 logo
 
-            // Only temporary, real check is for csfd id
-            var title = href.substring(href.indexOf('-')+1);
-            title = title.substring(0, title.indexOf('/')).replace(/-/g,' ');
-            var csfdSearch = [csfdId];// "[\"" + csfdId + "\"]}";
-            console.log('[SC2: CSFD ID %o]', csfdId);   
-            console.log('[SC2: CSFD search %o]', csfdSearch);
+            // ToDo: Only temporary, real check is for csfd id and is not yet done!
+            // var title = href.substring(href.indexOf('-')+1);
+            // title = title.substring(0, title.indexOf('/')).replace(/-/g,' ');
             
-            checkMedia('csfd', csfdSearch);
-            // console.log('[SC2: CSFD status %o]', status);   
+            var csfdSearch = [csfdId];
+            // console.log('[SC2: CSFD ID %o]', csfdSearch);   
+            checkMedia('csfd', csfdId);
             
         }
         
@@ -114,12 +109,13 @@ function sc2Integrate() {
         
         parentEl = document.getElementsByClassName('uc-add-wl-button uc-add-wl--not-in-wl uc-add-wl')[0];
         if (parentEl) {
-            // check IMDB ID, whether movie (TV Show) exists in SC2 database
+            // ToDo: check IMDB ID, whether movie (TV Show) exists in SC2 database
             // if yes - dipslay SC2 logo
             childEl = parentEl.childNodes[0];
             sc2 = document.createElement('img');
             sc2.src = sc2logoBlue;
             sc2.setAttribute('height', '48px');
+            // ToDo: Set some media info
             sc2.title = 'Media info by SC2 API...';
             sc2.setAttribute('style', 'margin-left: 16px; margin-bottom: 12px;');
             
@@ -142,13 +138,14 @@ function sc2Integrate() {
             }
             console.log('[SC2: TRAKT.TV id %o]', traktId);
             
-            // check TRAKT ID, whether movie (TV Show) exists in SC2 database
+            // ToDo: check TRAKT ID, whether movie (TV Show) exists in SC2 database
             // if yes - dipslay SC2 logo
             parentEl = document.getElementsByClassName('sidebar affixable affix-top')[0];
             childEl = parentEl.childNodes[1];
     
             sc2 = document.createElement('img');
             sc2.src = sc2logoBlue;
+            // ToDo: Set some media info
             sc2.title = 'Media info by SC2 API...';
             sc2.setAttribute('width', '173px');
             sc2.setAttribute('style', 'margin-top: 8px; margin-bottom: 8px;');
