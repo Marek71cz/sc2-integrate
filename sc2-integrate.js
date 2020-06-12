@@ -11,7 +11,6 @@
 
 const href = window.location.href;
 
-// ToDo:
 const sc2logoGrey = "https://i.ibb.co/n8xbr06/logo-seda.png";
 const sc2logoBlue = "https://i.ibb.co/P6SKgmR/logo-modra.png";
 const sc2logoRed  = "https://i.ibb.co/G28dXpW/logo-cervena.png";
@@ -56,7 +55,30 @@ function getInfoFromResponse(response) {
     } else {
         subs = '-';
     }
-    
+
+    // ToDo: stream info, video?
+    /*    
+    var mediaId = res._id;
+    console.log('[SC2: Stream id %o]', mediaId);
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("GET", 'https://plugin.sc2.zone/api/media/' + mediaId + '/streams', true);
+    xhttp.send();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            res = this.responseText;
+            var firstVideo = res[0];
+            console.log('[SC2: video %o]', firstVideo);
+            var codec = firstVideo.codec;
+            var width = firstVideo.width;
+            var height; 
+            if(width == 1920) {
+                height = '1080';
+            }
+            console.log('[SC2: Stream info %o]', codec + ', ' + width);
+        }
+    }  
+    */
+
     return 'Streamu: ' + streamsCount + '\nAudio: ' + langs + '\nTitulky: ' + subs;
 }
 
@@ -82,7 +104,7 @@ function checkMediaCSFD(id) {
             // parse response...
             var infoText = getInfoFromResponse(this.responseText);
             var traktURL = getTraktURLFromresponse(this.responseText);
-            console.log('[SC2: Trakt ID from CSFD id %o]', traktURL);
+            console.log('[SC2: Trakt URL from CSFD id %o]', traktURL);
             
             // get rating and set correct color of logo
             var ratingText = document.getElementsByClassName('average')[0].innerHTML;
@@ -125,7 +147,7 @@ function checkMediaIMDB(id) {
             // parse response...
             var infoText = getInfoFromResponse(this.responseText);
             var traktURL = getTraktURLFromresponse(this.responseText);
-            console.log('[SC2: Trakt ID from IMDB id %o]', traktURL);
+            console.log('[SC2: Trakt URL from IMDB id %o]', traktURL);
 
             // create a link node
             var link = document.createElement('a');
@@ -138,7 +160,7 @@ function checkMediaIMDB(id) {
             sc2.title = infoText;
             sc2.setAttribute('style', 'margin-left: 16px; margin-bottom: 12px;');
 
-            // append logo tolink node
+            // append logo to link node
             link.appendChild(sc2);
 
             parentEl.insertBefore(link, childEl);
@@ -148,7 +170,7 @@ function checkMediaIMDB(id) {
 
 function checkMediaTrakt(id) {
     var xhttp = new XMLHttpRequest();
-    xhttp.open("GET", getServiceURL('trakt', id), true);
+    xhttp.open("GET", getServiceURL('slug', id), true);
     xhttp.send();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) { 
@@ -199,17 +221,11 @@ function sc2Integrate() {
         var info = document.getElementsByClassName('summary-user-rating')[0];
         
         if (info) {
-            var dataType = info.getAttribute('data-type');
-            console.log('[SC2: TRAKT.TV type %o]', dataType);
-            var traktId = null;
-            
-            if (dataType == 'movie') {
-                traktId = info.getAttribute('data-movie-id');
-            } else if (dataType == 'show' || dataType == 'episode') {
-                traktId = info.getAttribute('data-show-id');
+            var slug = href.substring(href.indexOf('shows/') + 6);
+            if(slug.indexOf('/') == -1) {
+                console.log('[SC2: slug %o]', slug);
+                checkMediaTrakt(slug);
             }
-            console.log('[SC2: TRAKT.TV id %o]', traktId);
-            checkMediaTrakt(traktId);
         }
     }
 
