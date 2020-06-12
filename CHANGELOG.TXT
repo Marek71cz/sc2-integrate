@@ -1,3 +1,8 @@
+0.9
+Almost real functional releas, working for all services
+- csfd, imdb, trakt
+Adds media info to title attribute of SC2 logo
+
 0.5
 First functional release, only for CSFD
 
