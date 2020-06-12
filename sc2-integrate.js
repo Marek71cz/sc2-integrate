@@ -60,6 +60,19 @@ function getInfoFromResponse(response) {
     return 'Streamu: ' + streamsCount + ' Audio: ' + langs + ' Titulky: ' + subs;
 }
 
+function getTraktURLFromresponse(response) {
+    var res = JSON.parse(response); 
+    var slug = res.services.slug;
+    var mediaType = res.info_labels.mediatype;
+    var traktType;
+    if(mediaType == 'movie') {
+        traktType = 'movies';
+    } else {
+        traktType = 'shows';
+    }
+    return 'https://trakt.tv/' + traktType + '/' + slug;
+}
+
 function checkMediaCSFD(id) {
     var xhttp = new XMLHttpRequest();
     xhttp.open("GET", getServiceURL('csfd', id), true);
@@ -68,7 +81,9 @@ function checkMediaCSFD(id) {
         if (this.readyState == 4 && this.status == 200) { 
             // parse response...
             var infoText = getInfoFromResponse(this.responseText);
-
+            var traktURL = getTraktURLFromresponse(this.responseText);
+            console.log('[SC2: Trakt ID from CSFD id %o]', traktURL);
+            
             // get rating and set correct color of logo
             var ratingText = document.getElementsByClassName('average')[0].innerHTML;
             var rating = parseInt(ratingText.substring(0, ratingText.indexOf("%")));
@@ -80,14 +95,22 @@ function checkMediaCSFD(id) {
                 sc2src = sc2logoRed;
             }
             
+            // create a link node
+            var link = document.createElement('a');
+            link.href = traktURL;
+
             sc2 = document.createElement('img');
             sc2.src = sc2src;
             sc2.setAttribute('width', '128px');
             sc2.title = infoText;
+            
+            // append logo tolink node
+            link.appendChild(sc2);
+            
             br = document.createElement('br');
             
             var posterImg = document.getElementsByClassName('film-poster')[0];
-            insertAfter(sc2, posterImg);
+            insertAfter(link, posterImg);
             insertAfter(br, posterImg);
         }
     };
@@ -101,6 +124,12 @@ function checkMediaIMDB(id) {
         if (this.readyState == 4 && this.status == 200) { 
             // parse response...
             var infoText = getInfoFromResponse(this.responseText);
+            var traktURL = getTraktURLFromresponse(this.responseText);
+            console.log('[SC2: Trakt ID from IMDB id %o]', traktURL);
+
+            // create a link node
+            var link = document.createElement('a');
+            link.href = traktURL;
 
             childEl = parentEl.childNodes[0];
             sc2 = document.createElement('img');
@@ -108,7 +137,11 @@ function checkMediaIMDB(id) {
             sc2.setAttribute('height', '48px');
             sc2.title = infoText;
             sc2.setAttribute('style', 'margin-left: 16px; margin-bottom: 12px;');
-            parentEl.insertBefore(sc2, childEl);
+
+            // append logo tolink node
+            link.appendChild(sc2);
+
+            parentEl.insertBefore(link, childEl);
         }
     };
 }
