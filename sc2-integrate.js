@@ -46,18 +46,18 @@ function getInfoFromResponse(response) {
     }
     var langs;
     if(res.available_streams.audio_languages.length > 0) {
-        langs = res.available_streams.audio_languages;
+        langs = res.available_streams.audio_languages.toString().toUpperCase();
     } else {
         langs = '-';
     }
     var subs;
     if(res.available_streams.subtitles_languages.length > 0) {
-        subs = res.available_streams.subtitles_languages;
+        subs = res.available_streams.subtitles_languages.toString().toUpperCase();
     } else {
         subs = '-';
     }
     
-    return 'Streamu: ' + streamsCount + ' Audio: ' + langs + ' Titulky: ' + subs;
+    return 'Streamu: ' + streamsCount + '\nAudio: ' + langs + '\nTitulky: ' + subs;
 }
 
 function getTraktURLFromresponse(response) {
