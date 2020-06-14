@@ -1,3 +1,7 @@
+1.0
+Functional release for all services
+ToDo: display logo in lists
+
 0.9
 Almost real functional releas, working for all services
 - csfd, imdb, trakt

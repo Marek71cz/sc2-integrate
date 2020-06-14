@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name SC2-integrate
 // @license MIT
-// @version 0.9
+// @version 1.0
 // @downloadURL https://raw.githubusercontent.com/Marek71cz/sc2-integrate/master/sc2-integrate.js
 // @updateURL https://raw.githubusercontent.com/Marek71cz/sc2-integrate/master/sc2-integrate.js
 // @description Integrace SC2 do CSFD, IMDB a TRAKT.TV.
