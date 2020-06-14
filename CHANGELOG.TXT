@@ -4,6 +4,7 @@ Almost real functional releas, working for all services
 Added media info to title attribute of SC2 logo
 Added link from CSFD and IMDB to Trakt.tv
 Fixed trakt ID error
+New greay logo, autoupdate
 
 0.5
 First functional release, only for CSFD
