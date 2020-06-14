@@ -2,6 +2,8 @@
 // @name SC2-integrate
 // @license MIT
 // @version 0.9
+// @downloadURL https://raw.githubusercontent.com/Marek71cz/sc2-integrate/master/sc2-integrate.js
+// @updateURL https://raw.githubusercontent.com/Marek71cz/sc2-integrate/master/sc2-integrate.js
 // @description Integrace SC2 do CSFD, IMDB a TRAKT.TV.
 // @match https://www.csfd.cz/film/*
 // @match https://www.imdb.com/title/*
@@ -11,9 +13,10 @@
 
 const href = window.location.href;
 
-const sc2logoGrey = "https://i.ibb.co/n8xbr06/logo-seda.png";
-const sc2logoBlue = "https://i.ibb.co/P6SKgmR/logo-modra.png";
-const sc2logoRed  = "https://i.ibb.co/G28dXpW/logo-cervena.png";
+const sc2logoWhite = "https://sc2.zone/logo/seda.png";
+const sc2logoGrey = "https://i.ibb.co/YXdTfF9/logo-seda1.png";
+const sc2logoBlue = "https://sc2.zone/logo/modra.png";
+const sc2logoRed = "https://sc2.zone/logo/cervena.png";
 
 
 var indexStart = -1;
