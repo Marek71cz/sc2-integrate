@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name SC2-integrate
 // @license MIT
-// @version 1.0
+// @version 1.1
 // @downloadURL https://raw.githubusercontent.com/Marek71cz/sc2-integrate/master/sc2-integrate.js
 // @updateURL https://raw.githubusercontent.com/Marek71cz/sc2-integrate/master/sc2-integrate.js
 // @description Integrace SC2 do CSFD, IMDB a TRAKT.TV.
 // @match https://www.csfd.cz/film/*
+// @match https://www.csfd.cz/podrobne-vyhledavani/*
 // @match https://www.imdb.com/title/*
 // @match https://trakt.tv/shows/*
 // @match https://trakt.tv/movies/*
@@ -17,7 +18,11 @@ const sc2logoWhite = "https://sc2.zone/logo/seda.png";
 const sc2logoGrey = "https://i.ibb.co/YXdTfF9/logo-seda1.png";
 const sc2logoBlue = "https://sc2.zone/logo/modra.png";
 const sc2logoRed = "https://sc2.zone/logo/cervena.png";
+//const sc2logoRed = "https://i.ibb.co/sQfThKr/logo128cervena.png";
+const sclogoIMDB = "https://i.ibb.co/t31x4Nt/IMDBmodra.png"
+const sclogoTrakt = "https://i.ibb.co/K2092G4/TRAKTseda.png"
 
+const sc2LogoClear = "https://i.ibb.co/BtJyPYj/CSFDseda2.png";
 
 var indexStart = -1;
 var indexEnd = -1;
@@ -58,29 +63,6 @@ function getInfoFromResponse(response) {
     } else {
         subs = '-';
     }
-
-    // ToDo: stream info, video?
-    /*    
-    var mediaId = res._id;
-    console.log('[SC2: Stream id %o]', mediaId);
-    var xhttp = new XMLHttpRequest();
-    xhttp.open("GET", 'https://plugin.sc2.zone/api/media/' + mediaId + '/streams', true);
-    xhttp.send();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            res = this.responseText;
-            var firstVideo = res[0];
-            console.log('[SC2: video %o]', firstVideo);
-            var codec = firstVideo.codec;
-            var width = firstVideo.width;
-            var height; 
-            if(width == 1920) {
-                height = '1080';
-            }
-            console.log('[SC2: Stream info %o]', codec + ', ' + width);
-        }
-    }  
-    */
 
     return 'Streamu: ' + streamsCount + '\nAudio: ' + langs + '\nTitulky: ' + subs;
 }
@@ -141,6 +123,47 @@ function checkMediaCSFD(id) {
     };
 }
 
+// ToDo: Too many requests - SC2 server blocks!
+function checkCSFDList(item) {
+    // get first child node of td with movie name
+    var el = item.childNodes[0];
+    var title = el.innerHTML;
+    var link = el.getAttribute('href');
+    indexStart = link.indexOf('film/') + 5;
+    indexEnd = link.indexOf('-');
+    var csfdId = link.substring(indexStart, indexEnd);
+    console.log('[SC2: CSFD search, movie: %o]', title + ', csfd Id: ' + csfdId);
+    
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("GET", getServiceURL('csfd', csfdId), true);
+    xhttp.send();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) { 
+            // parse response...
+            var infoText = getInfoFromResponse(this.responseText);
+            var traktURL = getTraktURLFromresponse(this.responseText);
+            console.log('[SC2: Trakt URL from CSFD id %o]', traktURL);
+            
+            sc2src = sc2LogoClear;
+            
+            // create a link node
+            var link = document.createElement('a');
+            link.href = traktURL;
+
+            sc2 = document.createElement('img');
+            sc2.src = sc2src;
+            sc2.setAttribute('width', '16px');
+            sc2.title = infoText;
+            
+            // append logo tolink node
+            link.appendChild(sc2);
+            
+            item.insertBefore(link, el);
+        }
+    };
+    
+}
+
 function checkMediaIMDB(id) {
     var xhttp = new XMLHttpRequest();
     xhttp.open("GET", getServiceURL('imdb', id), true);
@@ -158,7 +181,7 @@ function checkMediaIMDB(id) {
 
             childEl = parentEl.childNodes[0];
             sc2 = document.createElement('img');
-            sc2.src = sc2logoBlue;
+            sc2.src = sclogoIMDB;
             sc2.setAttribute('height', '48px');
             sc2.title = infoText;
             sc2.setAttribute('style', 'margin-left: 16px; margin-bottom: 12px;');
@@ -184,7 +207,7 @@ function checkMediaTrakt(id) {
             childEl = parentEl.childNodes[1];
     
             sc2 = document.createElement('img');
-            sc2.src = sc2logoGrey;
+            sc2.src = sclogoTrakt;
             sc2.title = infoText
             sc2.setAttribute('width', '173px');
             sc2.setAttribute('style', 'margin-top: 8px; margin-bottom: 8px;');
@@ -206,7 +229,15 @@ function sc2Integrate() {
             console.log('[SC2: CSFD id %o]', csfdId);
             checkMediaCSFD(csfdId);
         }
-        
+              
+    } else if (href.indexOf('csfd.cz/podrobne-vyhledavani/') > 0) {
+        // csfd.cz - search
+        var movieList = document.getElementsByClassName('name');
+        var i;
+        for(i = 0; i < movieList.length; i++) {
+            // checkCSFDList(movieList[i]);
+        }
+         
     } else if (href.indexOf('imdb.com') >0) {
         // imdb.com
         indexStart = href.indexOf('title/') + 6;
@@ -224,7 +255,13 @@ function sc2Integrate() {
         var info = document.getElementsByClassName('summary-user-rating')[0];
         
         if (info) {
-            var slug = href.substring(href.indexOf('shows/') + 6);
+            indexStart = href.indexOf('movies/');
+            if(indexStart > -1) {
+                indexStart += 7;
+            }  else {
+                indexStart = href.indexOf('shows/') + 6;
+            }
+            var slug = href.substring(indexStart);
             if(slug.indexOf('/') == -1) {
                 console.log('[SC2: slug %o]', slug);
                 checkMediaTrakt(slug);

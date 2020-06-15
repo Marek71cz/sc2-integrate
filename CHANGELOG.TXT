@@ -1,6 +1,11 @@
+1.1
+Fixed bug in Trakt.tv movie page
+ToDo: display logo in lists
+
 1.0
 Functional release for all services
 ToDo: display logo in lists
+logo changes
 
 0.9
 Almost real functional releas, working for all services
