@@ -1,3 +1,7 @@
+1.3
+Added SC2 logo and info text in episodes for CSFD and IMDB
+Link from episode page on CSFD and IMDB leads to trakt.tv and not to the episode! Need to investigate.
+
 1.2
 Correct file name
 
