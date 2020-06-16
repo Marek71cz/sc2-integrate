@@ -1,3 +1,6 @@
+1.5
+Fixed logo color on CSFD page based on rating
+
 1.4
 New logo for IMDB episode
 
