@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            SC2-integrate
 // @license         MIT
-// @version         1.5
+// @version         1.6
 // @downloadURL     https://raw.githubusercontent.com/Marek71cz/sc2-integrate/master/sc2-integrate.user.js
 // @updateURL       https://raw.githubusercontent.com/Marek71cz/sc2-integrate/master/sc2-integrate.user.js
 // @description     Integrace SC2 do CSFD, IMDB a TRAKT.TV.
@@ -111,7 +111,7 @@ function getCSFDLogoByRating() {
     var ratingText = document.getElementsByClassName('average')[0].innerHTML;
     var rating = parseInt(ratingText.substring(0, ratingText.indexOf("%")));
     var sc2Src;
-    if(rating < 25) {
+    if(rating < 30) {
         sc2Src = sc2logoGrey;
     } else if(rating < 70) {
         sc2Src = sc2logoBlue;
