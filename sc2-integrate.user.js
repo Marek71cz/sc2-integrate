@@ -1,15 +1,19 @@
 // ==UserScript==
-// @name SC2-integrate
-// @license MIT
-// @version 1.4
-// @downloadURL https://raw.githubusercontent.com/Marek71cz/sc2-integrate/master/sc2-integrate.user.js
-// @updateURL https://raw.githubusercontent.com/Marek71cz/sc2-integrate/master/sc2-integrate.user.js
-// @description Integrace SC2 do CSFD, IMDB a TRAKT.TV.
-// @match https://www.csfd.cz/film/*
-// @match https://www.csfd.cz/podrobne-vyhledavani/*
-// @match https://www.imdb.com/title/*
-// @match https://trakt.tv/shows/*
-// @match https://trakt.tv/movies/*
+// @name            SC2-integrate
+// @license         MIT
+// @version         1.5
+// @downloadURL     https://raw.githubusercontent.com/Marek71cz/sc2-integrate/master/sc2-integrate.user.js
+// @updateURL       https://raw.githubusercontent.com/Marek71cz/sc2-integrate/master/sc2-integrate.user.js
+// @description     Integrace SC2 do CSFD, IMDB a TRAKT.TV.
+// @require         https://openuserjs.org/src/libs/sizzle/GM_config.js
+// @grant           GM_getValue
+// @grant           GM_setValue
+// @grant           GM_registerMenuCommand
+// @match           https://www.csfd.cz/film/*
+// @match           https://www.csfd.cz/podrobne-vyhledavani/*
+// @match           https://www.imdb.com/title/*
+// @match           https://trakt.tv/shows/*
+// @match           https://trakt.tv/movies/*
 // ==/UserScript==
 
 const href = window.location.href;
@@ -33,6 +37,25 @@ var childEl;
 // var sc2src;
 
 var br;
+
+var GM_config;
+GM_config.init(
+{
+  'id': 'SC2_IntegrateConfig', // The id used for this instance of GM_config
+  'fields': // Fields object
+  {
+    'enableOnCsfdSearch': // This is the id of the field
+    {
+      'label': 'SC2 Integrate on CSFD search page', // Appears next to field
+      'type': 'checkbox',
+      'default': false // Default value if user doesn't change it
+    }
+  }
+});
+
+GM_registerMenuCommand('Configure SC2-integrate', () => {
+    GM_config.open()
+})
 
 // Inserts newly created node after the node - this is not standart function
 function insertAfter(newNode, referenceNode) {
@@ -161,7 +184,6 @@ function checkMediaCSFDEpisode(id) {
 }
 
 // ToDo: Too many requests - SC2 server blocks!
-/*
 function checkCSFDList(item) {
     // get first child node of td with movie name
     var el = item.childNodes[0];
@@ -182,13 +204,13 @@ function checkCSFDList(item) {
             var traktURL = getTraktURLFromresponse(this.responseText);
             console.log('[SC2: Trakt URL from CSFD id %o]', traktURL);
             
-            var sc2src = sc2LogoClear;
+            var sc2src = sc2logoWhite;
             
             // create a link node
             var link = document.createElement('a');
             link.href = traktURL;
 
-            sc2 = document.createElement('img');
+            var sc2 = document.createElement('img');
             sc2.src = sc2src;
             sc2.setAttribute('width', '16px');
             sc2.title = infoText;
@@ -201,7 +223,6 @@ function checkCSFDList(item) {
     };
     
 }
-*/
 
 function checkMediaIMDB(id, inEpisode) {
     var xhttp = new XMLHttpRequest();
@@ -289,12 +310,13 @@ function sc2Integrate() {
             checkMediaCSFDEpisode(csfdId);
         }
               
-    } else if (href.indexOf('csfd.cz/podrobne-vyhledavani/') > 0) {
+    } else if ((href.indexOf('csfd.cz/podrobne-vyhledavani/') > 0) && (GM_config.get('enableOnCsfdSearch') == true)) {
         // csfd.cz - search
         var movieList = document.getElementsByClassName('name');
         var i;
-        for(i = 0; i < movieList.length; i++) {
-            // checkCSFDList(movieList[i]);
+        for(let i = 0; i < movieList.length; i++) {
+            var sleep = i * 1000;
+            setTimeout(function(){ checkCSFDList(movieList[i]); }, sleep);
         }
          
     } else if (href.indexOf('imdb.com') >0) {

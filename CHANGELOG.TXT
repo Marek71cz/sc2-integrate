@@ -1,3 +1,6 @@
+1.5
+Add config where user can enable intergation on CSFD podrobne-vyhledavani
+
 1.4
 New logo for IMDB episode
 
