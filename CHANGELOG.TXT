@@ -1,3 +1,6 @@
+1.2
+Correct file name
+
 1.1
 Fixed bug in Trakt.tv movie page
 ToDo: display logo in lists
