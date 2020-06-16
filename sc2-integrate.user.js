@@ -11,6 +11,7 @@
 // @match https://trakt.tv/shows/*
 // @match https://trakt.tv/movies/*
 // ==/UserScript==
+/* jshint -W097 */
 
 const href = window.location.href;
 
