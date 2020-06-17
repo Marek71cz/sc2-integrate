@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            SC2-integrate
 // @license         MIT
-// @version         1.7
+// @version         1.8
 // @downloadURL     https://raw.githubusercontent.com/Marek71cz/sc2-integrate/master/sc2-integrate.user.js
 // @updateURL       https://raw.githubusercontent.com/Marek71cz/sc2-integrate/master/sc2-integrate.user.js
 // @description     Integrace SC2 do CSFD, IMDB a TRAKT.TV.
@@ -10,7 +10,6 @@
 // @grant           GM_setValue
 // @grant           GM_registerMenuCommand
 // @match           https://www.csfd.cz/film/*
-// @match           https://www.csfd.cz/podrobne-vyhledavani/*
 // @match           https://www.imdb.com/title/*
 // @match           https://trakt.tv/shows/*
 // @match           https://trakt.tv/movies/*
@@ -38,25 +37,6 @@ var childEl;
 // var sc2src;
 
 var br;
-
-var GM_config;
-GM_config.init(
-{
-  'id': 'SC2_IntegrateConfig', // The id used for this instance of GM_config
-  'fields': // Fields object
-  {
-    'enableOnCsfdSearch': // This is the id of the field
-    {
-      'label': 'SC2 Integrate on CSFD search page', // Appears next to field
-      'type': 'checkbox',
-      'default': false // Default value if user doesn't change it
-    }
-  }
-});
-
-GM_registerMenuCommand('Configure SC2-integrate', () => {
-    GM_config.open()
-})
 
 // Inserts newly created node after the node - this is not standart function
 function insertAfter(newNode, referenceNode) {
@@ -312,6 +292,7 @@ function sc2Integrate() {
             checkMediaCSFDEpisode(csfdId);
         }
               
+    /*
     } else if ((href.indexOf('csfd.cz/podrobne-vyhledavani/') > 0) && (GM_config.get('enableOnCsfdSearch') == true)) {
         // csfd.cz - search
         var movieList = document.getElementsByClassName('name');
@@ -320,6 +301,9 @@ function sc2Integrate() {
             var sleep = i * 500;
             setTimeout(function(){ checkCSFDList(movieList[i]); }, sleep);
         }
+    }
+    */
+    
          
     } else if (href.indexOf('imdb.com') >0) {
         // imdb.com
