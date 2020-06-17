@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            SC2-integrate
 // @license         MIT
-// @version         1.6
+// @version         1.7
 // @downloadURL     https://raw.githubusercontent.com/Marek71cz/sc2-integrate/master/sc2-integrate.user.js
 // @updateURL       https://raw.githubusercontent.com/Marek71cz/sc2-integrate/master/sc2-integrate.user.js
 // @description     Integrace SC2 do CSFD, IMDB a TRAKT.TV.
@@ -28,6 +28,7 @@ const sclogoTrakt = "https://i.ibb.co/K2092G4/TRAKTseda.png"
 
 const sc2LogoClearGrey = "https://i.ibb.co/BtJyPYj/CSFDseda2.png";
 const sc2LogoClearBlue = "https://i.ibb.co/Ptt7NP3/IMDBclr-M2.png"
+const sc2ClearLogoList = "https://i.ibb.co/B2Ppnpv/CSFDclr-Svp.png"
 
 var indexStart = -1;
 var indexEnd = -1;
@@ -205,7 +206,7 @@ function checkCSFDList(item) {
             var traktURL = getTraktURLFromresponse(this.responseText);
             console.log('[SC2: Trakt URL from CSFD id %o]', traktURL);
             
-            var sc2src = sc2LogoClearGrey;
+            var sc2src = sc2ClearLogoList;
             
             // create a link node
             var link = document.createElement('a');
@@ -213,7 +214,7 @@ function checkCSFDList(item) {
 
             var sc2 = document.createElement('img');
             sc2.src = sc2src;
-            sc2.setAttribute('width', '16px');
+            sc2.setAttribute('width', '14px');
             sc2.title = infoText;
             
             // append logo tolink node
