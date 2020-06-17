@@ -184,6 +184,7 @@ function checkMediaCSFDEpisode(id) {
 }
 
 // ToDo: Too many requests - SC2 server blocks!
+// configurable
 function checkCSFDList(item) {
     // get first child node of td with movie name
     var el = item.childNodes[0];
@@ -204,7 +205,7 @@ function checkCSFDList(item) {
             var traktURL = getTraktURLFromresponse(this.responseText);
             console.log('[SC2: Trakt URL from CSFD id %o]', traktURL);
             
-            var sc2src = sc2logoWhite;
+            var sc2src = sc2LogoClearGrey;
             
             // create a link node
             var link = document.createElement('a');
@@ -315,7 +316,7 @@ function sc2Integrate() {
         var movieList = document.getElementsByClassName('name');
         var i;
         for(let i = 0; i < movieList.length; i++) {
-            var sleep = i * 1000;
+            var sleep = i * 500;
             setTimeout(function(){ checkCSFDList(movieList[i]); }, sleep);
         }
          
