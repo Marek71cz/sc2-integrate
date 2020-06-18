@@ -1,3 +1,6 @@
+1.9
+Removed IMDB and Trakt because of high server load
+
 1.8
 Remove logo from list, waiting for endpoint
 
