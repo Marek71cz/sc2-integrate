@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            SC2-integrate
 // @license         MIT
-// @version         1.9
+// @version         2.0
 // @downloadURL     https://raw.githubusercontent.com/Marek71cz/sc2-integrate/master/sc2-integrate.user.js
 // @updateURL       https://raw.githubusercontent.com/Marek71cz/sc2-integrate/master/sc2-integrate.user.js
 // @description     Integrace SC2 do CSFD, IMDB a TRAKT.TV.
@@ -15,9 +15,6 @@
 // https://www.imdb.com/title/*
 // https://trakt.tv/shows/*
 // https://trakt.tv/movies/*
-
-
-const href = window.location.href;
 
 const sc2logoWhite = "https://sc2.zone/logo/seda.png";
 const sc2logoGrey = "https://i.ibb.co/YXdTfF9/logo-seda1.png";
@@ -49,8 +46,7 @@ function getServiceURL(service, id) {
     return "https://plugin.sc2.zone/api/media/detail/service/" + service + "/" + id;
 }
 
-function getInfoFromResponse(response) {
-    var res = JSON.parse(response);
+function getInfoFromResponse(res) {
     
     var streamsCount;
     if(res.available_streams.count > 0){
@@ -127,7 +123,8 @@ function checkMediaCSFD(id) {
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) { 
             // parse response...
-            var infoText = getInfoFromResponse(this.responseText);
+            var res = JSON.parse(this.responseText);
+            var infoText = getInfoFromResponse(res);
             var traktURL = getTraktURLFromresponse(this.responseText);
             console.log('[SC2: Trakt URL from CSFD id %o]', traktURL);
             
@@ -136,9 +133,28 @@ function checkMediaCSFD(id) {
 
             br = document.createElement('br');
             
+            var ymlink = document.createElement('a');
+            var ymlinkhref = "";
+            if(res.info_labels.mediatype == "movie") {
+                ymlinkhref = "https://ymovie.herokuapp.com/#/movie/" + res._id; 
+            } else if (res.info_labels.mediatype == "tvshow") {
+                ymlinkhref = "https://ymovie.herokuapp.com/#/series/" + res._id; 
+            } else {
+                ymlinkhref = "https://ymovie.herokuapp.com/#/season/" + res._id; 
+            }
+            console.log('[SC2: Ymovie link: %o]', ymlinkhref);
+            ymlink.href = ymlinkhref;
+            ymlink.innerHTML  = "<strong>YMovie link</strong>";
+            
             var posterImg = document.getElementsByClassName('film-poster')[0];
-            insertAfter(link, posterImg);
-            insertAfter(br, posterImg);
+            
+            var divEl = document.createElement("div");
+            divEl.setAttribute("style", "text-align: center;");
+            divEl.appendChild(link);
+            divEl.appendChild(br);
+            divEl.appendChild(ymlink);
+
+            insertAfter(divEl, posterImg);
         }
     };
 }
@@ -150,7 +166,8 @@ function checkMediaCSFDEpisode(id) {
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) { 
             // parse response...
-            var infoText = getInfoFromResponse(this.responseText);
+            var res = JSON.parse(this.responseText);
+            var infoText = getInfoFromResponse(res);
             var traktURL = getTraktURLFromresponse(this.responseText);
             console.log('[SC2: Trakt URL from CSFD id %o]', traktURL);
             
@@ -159,9 +176,22 @@ function checkMediaCSFDEpisode(id) {
 
             br = document.createElement('br');
             
+            var ymlink = document.createElement('a');
+            var ymlinkhref = "https://ymovie.herokuapp.com/#/episode/" + res._id; 
+            console.log('[SC2: Ymovie link: %o]', ymlinkhref);
+            ymlink.href = ymlinkhref;
+            ymlink.innerHTML  = "<strong>YMovie link</strong>";
+
+
             var posterImg = document.getElementsByClassName('footer')[1];
-            insertAfter(link, posterImg);
-            insertAfter(br, posterImg);
+
+            var divEl = document.createElement("div");
+            divEl.setAttribute("style", "text-align: center;");
+            divEl.appendChild(link);
+            divEl.appendChild(br);
+            divEl.appendChild(ymlink);
+
+            insertAfter(divEl, posterImg);
         }
     };
 }
@@ -184,7 +214,8 @@ function checkCSFDList(item) {
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) { 
             // parse response...
-            var infoText = getInfoFromResponse(this.responseText);
+            var res = JSON.parse(this.responseText);
+            var infoText = getInfoFromResponse(res);
             var traktURL = getTraktURLFromresponse(this.responseText);
             console.log('[SC2: Trakt URL from CSFD id %o]', traktURL);
             
@@ -215,7 +246,8 @@ function checkMediaIMDB(id, inEpisode) {
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) { 
             // parse response...
-            var infoText = getInfoFromResponse(this.responseText);
+            var res = JSON.parse(this.responseText);
+            var infoText = getInfoFromResponse(res);
             var traktURL = getTraktURLFromresponse(this.responseText);
             console.log('[SC2: Trakt URL from IMDB id %o]', traktURL);
 
@@ -256,7 +288,8 @@ function checkMediaTrakt(id) {
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) { 
             // parse response...
-            var infoText = getInfoFromResponse(this.responseText);
+            var res = JSON.parse(this.responseText);
+            var infoText = getInfoFromResponse(res);
 
             parentEl = document.getElementsByClassName('sidebar affixable affix-top')[0];
             childEl = parentEl.childNodes[1];
@@ -274,18 +307,25 @@ function checkMediaTrakt(id) {
 
 function sc2Integrate() {
 
+    var href = window.location.href;
     if (href.indexOf('csfd.cz/film/') > 0) {
         // csfd.cz
         var csfdId;
         parentEl = document.getElementById("poster"); 
         if (parentEl) {
             indexStart = href.indexOf('film/') + 5;
-            indexEnd = href.indexOf('-');
+            var href = href.substring(indexStart);
+            if(href.indexOf("-serie-") < 0) {
+                indexStart = 0;
+            } else {
+                indexStart = href.indexOf("/") + 1;
+            }
+            indexEnd = href.indexOf('-', indexStart);
             csfdId = href.substring(indexStart, indexEnd);
             console.log('[SC2: CSFD id %o]', csfdId);
             checkMediaCSFD(csfdId);
         } else {
-            // we do not have prent, we are in episode
+            // we do not have parent, we are in episode
             var filmIndex = href.indexOf('film/') + 5;
             indexStart = href.indexOf("/", filmIndex) + 1;
             indexEnd = href.indexOf("-", indexStart);
