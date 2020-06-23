@@ -1,3 +1,6 @@
+2.1
+New logo
+
 2.0
 Added YMovie link, more info:
 https://ymovie.herokuapp.com/

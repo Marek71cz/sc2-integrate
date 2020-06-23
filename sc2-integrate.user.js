@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            SC2-integrate
 // @license         MIT
-// @version         2.0
+// @version         2.1
 // @downloadURL     https://raw.githubusercontent.com/Marek71cz/sc2-integrate/master/sc2-integrate.user.js
 // @updateURL       https://raw.githubusercontent.com/Marek71cz/sc2-integrate/master/sc2-integrate.user.js
 // @description     Integrace SC2 do CSFD, IMDB a TRAKT.TV.
@@ -16,13 +16,13 @@
 // https://trakt.tv/shows/*
 // https://trakt.tv/movies/*
 
-const sc2logoWhite = "https://sc2.zone/logo/seda.png";
-const sc2logoGrey = "https://i.ibb.co/YXdTfF9/logo-seda1.png";
-const sc2logoBlue = "https://sc2.zone/logo/modra.png";
-const sc2logoRed = "https://sc2.zone/logo/cervena.png";
-//const sc2logoRed = "https://i.ibb.co/sQfThKr/logo128cervena.png";
-const sclogoIMDB = "https://i.ibb.co/t31x4Nt/IMDBmodra.png"
-const sclogoTrakt = "https://i.ibb.co/K2092G4/TRAKTseda.png"
+const sc2logoWhite = "https://i.imgur.com/NnJVWwX.png";
+const sc2logoGrey = "https://i.imgur.com/ocuiaI1.png";
+const sc2logoBlue = "https://i.imgur.com/L5vWSYH.png";
+const sc2logoRed = "https://i.imgur.com/sBnA8xZ.png";
+
+const sclogoIMDB = "https://i.imgur.com/L5vWSYH.png"
+const sclogoTrakt = "https://i.imgur.com/ocuiaI1.png"
 
 const sc2LogoClearGrey = "https://i.ibb.co/BtJyPYj/CSFDseda2.png";
 const sc2LogoClearBlue = "https://i.ibb.co/Ptt7NP3/IMDBclr-M2.png"
@@ -314,7 +314,7 @@ function sc2Integrate() {
         parentEl = document.getElementById("poster"); 
         if (parentEl) {
             indexStart = href.indexOf('film/') + 5;
-            var href = href.substring(indexStart);
+            href = href.substring(indexStart);
             if(href.indexOf("-serie-") < 0) {
                 indexStart = 0;
             } else {
