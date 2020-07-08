@@ -1,5 +1,8 @@
+2.5
+SCC logo in lists, thanks to SCC API just one request for the whole list
+
 2.1
-New logo
+New logo SCC
 
 2.0
 Added YMovie link, more info:
