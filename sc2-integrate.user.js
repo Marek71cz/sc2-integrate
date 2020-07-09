@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            SC2-integrate
 // @license         MIT
-// @version         2.5
+// @version         2.6
 // @downloadURL     https://raw.githubusercontent.com/Marek71cz/sc2-integrate/master/sc2-integrate.user.js
 // @updateURL       https://raw.githubusercontent.com/Marek71cz/sc2-integrate/master/sc2-integrate.user.js
 // @description     Integrace SC2 do CSFD, IMDB a TRAKT.TV.
@@ -19,11 +19,12 @@ const sc2logoGrey = "https://i.imgur.com/ocuiaI1.png";
 const sc2logoBlue = "https://i.imgur.com/L5vWSYH.png";
 const sc2logoRed = "https://i.imgur.com/sBnA8xZ.png";
 
-const sclogoIMDB = "https://i.imgur.com/L5vWSYH.png"
+const sclogoIMDB = "https://i.ibb.co/g68CT1v/IMDBnew-M.png"
 const sclogoTrakt = "https://i.imgur.com/ocuiaI1.png"
 
 const sc2LogoClearGrey = "https://i.ibb.co/BtJyPYj/CSFDseda2.png";
-const sc2LogoClearBlue = "https://i.ibb.co/Ptt7NP3/IMDBclr-M2.png"
+//const sc2LogoClearBlue = "https://i.ibb.co/Ptt7NP3/IMDBclr-M2.png"
+const sc2LogoClearBlue = "https://i.ibb.co/vQD1Y5V/IMDBclr-M2new.png"
 const sc2ClearLogoList = "https://i.ibb.co/B2Ppnpv/CSFDclr-Svp.png"
 
 var indexStart = -1;
@@ -264,7 +265,7 @@ function checkMediaIMDB(id, inEpisode) {
             } else {
                 sc2.src = sclogoIMDB;
                 sc2.setAttribute('height', '48px');
-                sc2.setAttribute('style', 'margin-bottom: 15px;');
+                sc2.setAttribute('style', 'margin-bottom: 16px;');
             }
 
             // append logo to link node
@@ -350,16 +351,16 @@ function sc2Integrate() {
 
     } else if (href.indexOf('csfd.cz/zebricky/') > 0) {
         // csfd.cz - search
-        var movieList = document.getElementsByClassName('film');
-        var url = "https://plugin.sc2.zone/api/media/filter/service?type=*&service=csfd&limit=300"
+        movieList = document.getElementsByClassName('film');
+        url = "https://plugin.sc2.zone/api/media/filter/service?type=*&service=csfd&limit=300"
         for(let i = 0; i < movieList.length; i++) {
-            var item = movieList[i];
-            var el = item.childNodes[0];
-            var title = el.innerHTML;
-            var link = el.getAttribute('href');
+            item = movieList[i];
+            el = item.childNodes[0];
+            title = el.innerHTML;
+            link = el.getAttribute('href');
             indexStart = link.indexOf('film/') + 5;
             indexEnd = link.indexOf('-');
-            var id = link.substring(indexStart, indexEnd);
+            id = link.substring(indexStart, indexEnd);
             url = url + "&value=" + id;
         }
         checkCSFDList(url, movieList);

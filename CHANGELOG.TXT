@@ -1,3 +1,6 @@
+2.6
+All logos changed to SCC
+
 2.5
 SCC logo in lists, thanks to SCC API just one request for the whole list
 
