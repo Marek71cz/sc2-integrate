@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            SC2-integrate
 // @license         MIT
-// @version         2.6
+// @version         2.7
 // @downloadURL     https://raw.githubusercontent.com/Marek71cz/sc2-integrate/master/sc2-integrate.user.js
 // @updateURL       https://raw.githubusercontent.com/Marek71cz/sc2-integrate/master/sc2-integrate.user.js
 // @description     Integrace SC2 do CSFD, IMDB a TRAKT.TV.
@@ -25,7 +25,8 @@ const sclogoTrakt = "https://i.imgur.com/ocuiaI1.png"
 const sc2LogoClearGrey = "https://i.ibb.co/BtJyPYj/CSFDseda2.png";
 //const sc2LogoClearBlue = "https://i.ibb.co/Ptt7NP3/IMDBclr-M2.png"
 const sc2LogoClearBlue = "https://i.ibb.co/vQD1Y5V/IMDBclr-M2new.png"
-const sc2ClearLogoList = "https://i.ibb.co/B2Ppnpv/CSFDclr-Svp.png"
+const sc2ClearLogoListOld = "https://i.ibb.co/B2Ppnpv/CSFDclr-Svp.png"
+const sc2ClearLogoList = "https://i.ibb.co/v17HkRF/CSFDMarker.png"
 
 var indexStart = -1;
 var indexEnd = -1;
@@ -226,6 +227,7 @@ function checkCSFDList(url, movieList) {
                     var sc2 = document.createElement('img');
                     sc2.src = sc2src;
                     sc2.setAttribute('width', '14px');
+                    sc2.setAttribute('style', 'margin-right: 4px;');
                     sc2.title = mapData.get(id);
                     // link.appendChild(sc2);
                     item.insertBefore(sc2, el);
