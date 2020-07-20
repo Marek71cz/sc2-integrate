@@ -1,3 +1,7 @@
+2.8
+Icons are now located directly on github and used from there
+Bug fixed on IMDB page
+
 2.7
 List logo channged
 

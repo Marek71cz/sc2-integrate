@@ -1,11 +1,10 @@
 // ==UserScript==
 // @name            SC2-integrate
 // @license         MIT
-// @version         2.7
+// @version         2.8
 // @downloadURL     https://raw.githubusercontent.com/Marek71cz/sc2-integrate/master/sc2-integrate.user.js
 // @updateURL       https://raw.githubusercontent.com/Marek71cz/sc2-integrate/master/sc2-integrate.user.js
 // @description     Integrace SC2 do CSFD, IMDB a TRAKT.TV.
-// @require         https://openuserjs.org/src/libs/sizzle/GM_config.js
 // @match           https://www.csfd.cz/film/*
 // @match           https://www.csfd.cz/podrobne-vyhledavani/*
 // @match           https://www.csfd.cz/zebricky/*
@@ -16,27 +15,28 @@
 
 // const logoWhite = "https://i.imgur.com/NnJVWwX.png";
 
+const ICONS_ROOT = "https://raw.githubusercontent.com/Marek71cz/sc2-integrate/master/icons/";
+
 // icons for CSFD page
-const logoCSFDGrey = "https://i.imgur.com/ocuiaI1.png";
-const logoCSFDBlue = "https://i.imgur.com/L5vWSYH.png";
-const logoCSFDRed = "https://i.imgur.com/sBnA8xZ.png";
+const ICON_CSFD_GREY = ICONS_ROOT + "logoCSFDGrey.png"
+const ICON_CSFD_BLUE = ICONS_ROOT + "logoCSFDBlue.png"
+const ICON_CSFD_RED  = ICONS_ROOT + "logoCSFDRed.png"
 
 // icon for CSFD lists
-const logoCSFDList = "https://i.ibb.co/v17HkRF/CSFDMarker.png"
+const ICON_CSFD_LIST = ICONS_ROOT + "logoCSFDList.png"
 
 // icons for IMDB page
-const logoIMDB = "https://i.ibb.co/g68CT1v/IMDBnew-M.png"
-const logoIMDBEpisode = "https://i.ibb.co/vQD1Y5V/IMDBclr-M2new.png"
+const ICON_IMDB = ICONS_ROOT + "logoIMDB.png"
+
+const ICON_IMDB_EPISODE = ICONS_ROOT + "logoIMDBEpisode.png"
 
 // icon for Trakt page
-const logoTrakt = "https://i.imgur.com/ocuiaI1.png"
+const ICON_TRAKT = ICONS_ROOT + "logoTrakt.png"
 
 var indexStart = -1;
 var indexEnd = -1;
 var parentEl;
 var childEl;
-// var sc2;
-// var sc2src;
 
 var br;
 
@@ -94,11 +94,11 @@ function getCSFDLogoByRating() {
     var rating = parseInt(ratingText.substring(0, ratingText.indexOf("%")));
     var sc2Src;
     if(rating < 30) {
-        sc2Src = logoCSFDGrey;
+        sc2Src = ICON_CSFD_GREY;
     } else if(rating < 70) {
-        sc2Src = logoCSFDBlue;
+        sc2Src = ICON_CSFD_BLUE;
     } else {
-        sc2Src = logoCSFDRed;
+        sc2Src = ICON_CSFD_RED;
     }
     return sc2Src;
 }
@@ -226,7 +226,7 @@ function checkCSFDList(url, movieList) {
                 indexEnd = link.indexOf('-');
                 var id = link.substring(indexStart, indexEnd);
                 if(mapData.has(id)) {
-                    var sc2src = logoCSFDList;
+                    var sc2src = ICON_CSFD_LIST;
                     var sc2 = document.createElement('img');
                     sc2.src = sc2src;
                     sc2.setAttribute('width', '14px');
@@ -259,16 +259,15 @@ function checkMediaIMDB(id, inEpisode) {
             var link = document.createElement('a');
             link.href = traktURL;
 
-            childEl = parentEl.childNodes[0];
             var sc2 = document.createElement('img');
             sc2.title = infoText;
 
             if(inEpisode) {
-                sc2.src = logoIMDBEpisode;
+                sc2.src = ICON_IMDB_EPISODE;
                 sc2.setAttribute('height', '56px');
                 sc2.setAttribute('style', 'margin-left: 20px;');
             } else {
-                sc2.src = logoIMDB;
+                sc2.src = ICON_IMDB;
                 sc2.setAttribute('height', '48px');
                 sc2.setAttribute('style', 'margin-left: 20px;');
             }
@@ -276,8 +275,6 @@ function checkMediaIMDB(id, inEpisode) {
             // append logo to link node
             link.appendChild(sc2);
 
-            // parentEl.insertBefore(link, childEl);
-            // var afterElement = document.getElementsByClassName("ipc-button uc-add-wl-button-icon--add watchlist--title-main-desktop-standalone ipc-button--core-base ipc-button--single-padding ipc-button--default-height")[0];
             var afterElement = document.getElementsByClassName("plot_summary")[0];
             insertAfter(link, afterElement);
 
@@ -300,7 +297,7 @@ function checkMediaTrakt(id) {
             childEl = parentEl.childNodes[1];
 
             var sc2 = document.createElement('img');
-            sc2.src = logoTrakt;
+            sc2.src = ICON_TRAKT;
             sc2.title = infoText
             sc2.setAttribute('width', '173px');
             sc2.setAttribute('style', 'margin-top: 8px; margin-bottom: 8px;');
