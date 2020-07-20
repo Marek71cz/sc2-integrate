@@ -14,19 +14,22 @@
 // @match           https://trakt.tv/movies/*
 // ==/UserScript==
 
-const sc2logoWhite = "https://i.imgur.com/NnJVWwX.png";
-const sc2logoGrey = "https://i.imgur.com/ocuiaI1.png";
-const sc2logoBlue = "https://i.imgur.com/L5vWSYH.png";
-const sc2logoRed = "https://i.imgur.com/sBnA8xZ.png";
+// const logoWhite = "https://i.imgur.com/NnJVWwX.png";
 
-const sclogoIMDB = "https://i.ibb.co/g68CT1v/IMDBnew-M.png"
-const sclogoTrakt = "https://i.imgur.com/ocuiaI1.png"
+// icons for CSFD page
+const logoCSFDGrey = "https://i.imgur.com/ocuiaI1.png";
+const logoCSFDBlue = "https://i.imgur.com/L5vWSYH.png";
+const logoCSFDRed = "https://i.imgur.com/sBnA8xZ.png";
 
-const sc2LogoClearGrey = "https://i.ibb.co/BtJyPYj/CSFDseda2.png";
-//const sc2LogoClearBlue = "https://i.ibb.co/Ptt7NP3/IMDBclr-M2.png"
-const sc2LogoClearBlue = "https://i.ibb.co/vQD1Y5V/IMDBclr-M2new.png"
-const sc2ClearLogoListOld = "https://i.ibb.co/B2Ppnpv/CSFDclr-Svp.png"
-const sc2ClearLogoList = "https://i.ibb.co/v17HkRF/CSFDMarker.png"
+// icon for CSFD lists
+const logoCSFDList = "https://i.ibb.co/v17HkRF/CSFDMarker.png"
+
+// icons for IMDB page
+const logoIMDB = "https://i.ibb.co/g68CT1v/IMDBnew-M.png"
+const logoIMDBEpisode = "https://i.ibb.co/vQD1Y5V/IMDBclr-M2new.png"
+
+// icon for Trakt page
+const logoTrakt = "https://i.imgur.com/ocuiaI1.png"
 
 var indexStart = -1;
 var indexEnd = -1;
@@ -91,11 +94,11 @@ function getCSFDLogoByRating() {
     var rating = parseInt(ratingText.substring(0, ratingText.indexOf("%")));
     var sc2Src;
     if(rating < 30) {
-        sc2Src = sc2logoGrey;
+        sc2Src = logoCSFDGrey;
     } else if(rating < 70) {
-        sc2Src = sc2logoBlue;
+        sc2Src = logoCSFDBlue;
     } else {
-        sc2Src = sc2logoRed;
+        sc2Src = logoCSFDRed;
     }
     return sc2Src;
 }
@@ -223,7 +226,7 @@ function checkCSFDList(url, movieList) {
                 indexEnd = link.indexOf('-');
                 var id = link.substring(indexStart, indexEnd);
                 if(mapData.has(id)) {
-                    var sc2src = sc2ClearLogoList;
+                    var sc2src = logoCSFDList;
                     var sc2 = document.createElement('img');
                     sc2.src = sc2src;
                     sc2.setAttribute('width', '14px');
@@ -261,20 +264,21 @@ function checkMediaIMDB(id, inEpisode) {
             sc2.title = infoText;
 
             if(inEpisode) {
-                sc2.src = sc2LogoClearBlue;
+                sc2.src = logoIMDBEpisode;
                 sc2.setAttribute('height', '56px');
-                sc2.setAttribute('style', 'margin-bottom: 16px;');
+                sc2.setAttribute('style', 'margin-left: 20px;');
             } else {
-                sc2.src = sclogoIMDB;
+                sc2.src = logoIMDB;
                 sc2.setAttribute('height', '48px');
-                sc2.setAttribute('style', 'margin-bottom: 16px;');
+                sc2.setAttribute('style', 'margin-left: 20px;');
             }
 
             // append logo to link node
             link.appendChild(sc2);
 
             // parentEl.insertBefore(link, childEl);
-            var afterElement = document.getElementsByClassName("ipc-button uc-add-wl-button-icon--add watchlist--title-main-desktop-standalone ipc-button--core-base ipc-button--single-padding ipc-button--default-height")[0];
+            // var afterElement = document.getElementsByClassName("ipc-button uc-add-wl-button-icon--add watchlist--title-main-desktop-standalone ipc-button--core-base ipc-button--single-padding ipc-button--default-height")[0];
+            var afterElement = document.getElementsByClassName("plot_summary")[0];
             insertAfter(link, afterElement);
 
 
@@ -296,7 +300,7 @@ function checkMediaTrakt(id) {
             childEl = parentEl.childNodes[1];
 
             var sc2 = document.createElement('img');
-            sc2.src = sclogoTrakt;
+            sc2.src = logoTrakt;
             sc2.title = infoText
             sc2.setAttribute('width', '173px');
             sc2.setAttribute('style', 'margin-top: 8px; margin-bottom: 8px;');
