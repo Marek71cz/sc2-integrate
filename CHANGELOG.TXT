@@ -1,3 +1,6 @@
+2.9
+Added SCC icons on TMDB page - currently only on movie/tv detail page
+
 2.8
 Icons are now located directly on github and used from there
 Bug fixed on IMDB page

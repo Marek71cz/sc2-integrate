@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            SC2-integrate
 // @license         MIT
-// @version         2.8
+// @version         2.9
 // @downloadURL     https://raw.githubusercontent.com/Marek71cz/sc2-integrate/master/sc2-integrate.user.js
 // @updateURL       https://raw.githubusercontent.com/Marek71cz/sc2-integrate/master/sc2-integrate.user.js
 // @description     Integrace SC2 do CSFD, IMDB a TRAKT.TV.
@@ -11,6 +11,8 @@
 // @match           https://www.imdb.com/title/*
 // @match           https://trakt.tv/shows/*
 // @match           https://trakt.tv/movies/*
+// @match           https://www.themoviedb.org/tv/*
+// @match           https://www.themoviedb.org/movie/*
 // ==/UserScript==
 
 // const logoWhite = "https://i.imgur.com/NnJVWwX.png";
@@ -39,6 +41,10 @@ var parentEl;
 var childEl;
 
 var br;
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 // Inserts newly created node after the node - this is not standart function
 function insertAfter(newNode, referenceNode) {
@@ -307,6 +313,84 @@ function checkMediaTrakt(id) {
     };
 }
 
+async function checkMediaTMDB(id, slug, type) {
+    var xhttp = new XMLHttpRequest();
+    var xhttp2 = new XMLHttpRequest();
+
+    /*
+    if (type == 'tv' && slug != '') {
+        xhttp.open("GET", getServiceURL('slug', slug), true);
+    } else {
+        xhttp.open("GET", getServiceURL('tmdb', id), true);
+    }
+    */
+
+    xhttp.open("GET", getServiceURL('slug', slug), true);
+    xhttp.send();
+    var requestOK = false;
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            requestOK = true;
+            // parse response...
+            var res = JSON.parse(this.responseText);
+            var infoText = getInfoFromResponse(res);
+            var traktURL = getTraktURLFromresponse(this.responseText);
+
+            // create a link node
+            var link = document.createElement('a');
+            link.href = traktURL;
+
+            var sc2 = document.createElement('img');
+            sc2.title = infoText;
+            sc2.src = ICON_TRAKT;
+            sc2.setAttribute('width', '184px');
+            sc2.setAttribute('style', 'margin-bottom: 12px;');
+
+            // append logo to link node
+            link.appendChild(sc2);
+
+            var afterElement = document.getElementsByClassName('facts left_column')[0].firstChild;
+            insertAfter(link, afterElement);
+        }
+    };
+
+    console.log('[SC2: before sleep]');
+    await sleep(1000);
+    console.log('[SC2: after sleep]');
+    
+    xhttp2.open("GET", getServiceURL('tmdb', id), true);
+    xhttp2.send();
+    xhttp2.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            // parse response...
+            var res = JSON.parse(this.responseText);
+            var infoText = getInfoFromResponse(res);
+            var traktURL = getTraktURLFromresponse(this.responseText);
+
+            // create a link node if does not exist
+            var scclink = document.getElementById('scclogo');
+            if(requestOK == false) {
+                var link = document.createElement('a');
+                link.id = 'scclogo';
+                link.href = traktURL;
+    
+                var sc2 = document.createElement('img');
+                sc2.title = infoText;
+                sc2.src = ICON_TRAKT;
+                sc2.setAttribute('width', '184px');
+                sc2.setAttribute('style', 'margin-bottom: 12px;');
+    
+                // append logo to link node
+                link.appendChild(sc2);
+    
+                var afterElement = document.getElementsByClassName('facts left_column')[0].firstChild;
+                insertAfter(link, afterElement);
+            }
+
+        }
+    };
+}
+
 function sc2Integrate() {
 
     var href = window.location.href;
@@ -402,6 +486,31 @@ function sc2Integrate() {
                 checkMediaTrakt(slug);
             }
         }
+    
+    } else if (href.indexOf('themoviedb.org') > 0) {
+        // TMDB
+        slug = '';
+        indexStart = href.indexOf('-') + 1;
+        if(indexStart > 0) {
+            slug = href.substring(indexStart);
+        }
+        
+        var tmdbId = ''
+        indexStart = href.lastIndexOf('/') + 1;
+        indexEnd = href.indexOf('-');
+        if(indexEnd > 0) {
+            tmdbId = href.substring(indexStart, indexEnd);
+        } else {
+            tmdbId = href.substring(indexStart);
+        }
+        
+        var type = 'movie';
+        if(href.indexOf('tv/') > -1) {
+            type = 'tv';
+        }
+
+        console.log('[SC2: TMDB id: %o, slug: %o, type: %o]', tmdbId, slug, type);
+        checkMediaTMDB(tmdbId, slug, type);
     }
 
 }
