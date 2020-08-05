@@ -1,3 +1,6 @@
+3.1
+Fixed problem with displaying audio information
+
 3.0
 Changed requests because of API change
 

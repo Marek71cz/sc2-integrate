@@ -63,9 +63,16 @@ function getInfoFromResponse(res) {
     } else {
         streamsCount = '-';
     }
-    var langs;
+    var langs = '';
     if(res.available_streams.audio_languages.length > 0) {
-        langs = res.available_streams.audio_languages.toString().toUpperCase();
+        for(i = 0; i < res.available_streams.audio_languages.length; i++) {
+            if(langs != '') {
+                langs = langs + ', ' + res.available_streams.audio_languages[i].lang.toUpperCase();
+            } else {
+                langs = res.available_streams.audio_languages[i].lang.toUpperCase();    
+            }
+        }
+        //langs = res.available_streams.audio_languages.toString().toUpperCase();
     } else {
         langs = '-';
     }
@@ -339,6 +346,7 @@ async function checkMediaTMDB(id, slug, type) {
             requestOK = true;
             // parse response...
             var res = JSON.parse(this.responseText);
+            console.log("----- RESULT: " + res)
             var infoText = getInfoFromResponse(res);
             var traktURL = getTraktURLFromresponse(this.responseText);
 
@@ -371,6 +379,8 @@ async function checkMediaTMDB(id, slug, type) {
         if (this.readyState == 4 && this.status == 200) {
             // parse response...
             var res = JSON.parse(this.responseText);
+            console.log("----- RESULT: " + res)
+            console.log("----- URL: " + getServiceURL('tmdb', id))
             var infoText = getInfoFromResponse(res);
             var traktURL = getTraktURLFromresponse(this.responseText);
 
