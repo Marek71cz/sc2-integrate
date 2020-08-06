@@ -287,7 +287,7 @@ function checkMediaIMDB(id, inEpisode) {
             } else {
                 sc2.src = ICON_IMDB;
                 sc2.setAttribute('height', '48px');
-                sc2.setAttribute('style', 'margin-left: 20px;');
+                sc2.setAttribute('style', 'margin-left: 20px;margin-bottom: 16px;');
             }
 
             // append logo to link node
