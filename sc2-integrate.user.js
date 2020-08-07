@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            SC2-integrate
 // @license         MIT
-// @version         3.2
+// @version         3.3
 // @downloadURL     https://raw.githubusercontent.com/Marek71cz/sc2-integrate/master/sc2-integrate.user.js
 // @updateURL       https://raw.githubusercontent.com/Marek71cz/sc2-integrate/master/sc2-integrate.user.js
 // @description     Integrace SC2 do CSFD, IMDB a TRAKT.TV.
@@ -52,7 +52,7 @@ function insertAfter(newNode, referenceNode) {
 }
 
 function getServiceURL(service, id) {
-    return "https://plugin.sc2.zone/api/media/detail/service/" + service + "/" + id;
+    return "https://plugin.sc2.zone/api/media/detail/service/" + service + "/" + id + "?access_token=9ajdu4xyn1ig8nxsodr3";
 }
 
 function getInfoFromResponse(res) {
@@ -329,15 +329,6 @@ function checkMediaTrakt(id) {
 async function checkMediaTMDB(id, slug, type) {
     var xhttp = new XMLHttpRequest();
     var xhttp2 = new XMLHttpRequest();
-
-    /*
-    if (type == 'tv' && slug != '') {
-        xhttp.open("GET", getServiceURL('slug', slug), true);
-    } else {
-        xhttp.open("GET", getServiceURL('tmdb', id), true);
-    }
-    */
-
     xhttp.open("GET", getServiceURL('slug', slug), true);
     xhttp.setRequestHeader('Authorization', 'Basic 9ajdu4xyn1ig8nxsodr3');
     xhttp.send();
@@ -452,6 +443,7 @@ function sc2Integrate() {
             var id = link.substring(indexStart, indexEnd);
             url = url + "&value=" + id;
         }
+        url = url + "?access_token=9ajdu4xyn1ig8nxsodr3"
         checkCSFDList(url, movieList);
 
     } else if (href.indexOf('csfd.cz/zebricky/') > 0) {
@@ -468,6 +460,7 @@ function sc2Integrate() {
             id = link.substring(indexStart, indexEnd);
             url = url + "&value=" + id;
         }
+        url = url + "?access_token=9ajdu4xyn1ig8nxsodr3"
         checkCSFDList(url, movieList);
 
     } else if (href.indexOf('imdb.com') >0) {

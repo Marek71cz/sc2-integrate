@@ -1,3 +1,6 @@
+3.3
+Changed requests because of API change
+
 3.2
 Variable declaration
 IMDB logo position fixed
