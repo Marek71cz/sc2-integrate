@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            SC2-integrate
 // @license         MIT
-// @version         3.3
+// @version         3.4
 // @downloadURL     https://raw.githubusercontent.com/Marek71cz/sc2-integrate/master/sc2-integrate.user.js
 // @updateURL       https://raw.githubusercontent.com/Marek71cz/sc2-integrate/master/sc2-integrate.user.js
 // @description     Integrace SC2 do CSFD, IMDB a TRAKT.TV.
@@ -34,6 +34,9 @@ const ICON_IMDB_EPISODE = ICONS_ROOT + "logoIMDBEpisode.png"
 
 // icon for Trakt page
 const ICON_TRAKT = ICONS_ROOT + "logoTrakt.png"
+
+// Ymovie link 
+const YMOVIE_LINK = "https://ymovie.herokuapp.com/#/scc/"
 
 var indexStart = -1;
 var indexEnd = -1;
@@ -154,11 +157,11 @@ function checkMediaCSFD(id) {
             var ymlink = document.createElement('a');
             var ymlinkhref = "";
             if(res.info_labels.mediatype == "movie") {
-                ymlinkhref = "https://ymovie.herokuapp.com/#/movie/" + res._id;
+                ymlinkhref = YMOVIE_LINK + "movie/" + res._id;
             } else if (res.info_labels.mediatype == "tvshow") {
-                ymlinkhref = "https://ymovie.herokuapp.com/#/series/" + res._id;
+                ymlinkhref = YMOVIE_LINK + "series/" + res._id;
             } else {
-                ymlinkhref = "https://ymovie.herokuapp.com/#/season/" + res._id;
+                ymlinkhref = YMOVIE_LINK + "season/" + res._id;
             }
             console.log('[SC2: Ymovie link: %o]', ymlinkhref);
             ymlink.href = ymlinkhref;
@@ -196,7 +199,7 @@ function checkMediaCSFDEpisode(id) {
             br = document.createElement('br');
 
             var ymlink = document.createElement('a');
-            var ymlinkhref = "https://ymovie.herokuapp.com/#/episode/" + res._id;
+            var ymlinkhref = YMOVIE_LINK + "episode/" + res._id;
             console.log('[SC2: Ymovie link: %o]', ymlinkhref);
             ymlink.href = ymlinkhref;
             ymlink.innerHTML = "<strong>YMovie link</strong>";
