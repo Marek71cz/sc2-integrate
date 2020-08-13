@@ -139,7 +139,7 @@ function getCSFDLink(traktURL, sc2Src, infoText) {
 function checkMediaCSFD(id) {
     var xhttp = new XMLHttpRequest();
     xhttp.open("GET", getServiceURL('csfd', id), true);
-    xhttp.setRequestHeader('Authorization', 'Basic 9ajdu4xyn1ig8nxsodr3');
+    // xhttp.setRequestHeader('Authorization', 'Basic 9ajdu4xyn1ig8nxsodr3');
     xhttp.send();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -183,7 +183,7 @@ function checkMediaCSFD(id) {
 function checkMediaCSFDEpisode(id) {
     var xhttp = new XMLHttpRequest();
     xhttp.open("GET", getServiceURL('csfd', id), true);
-    xhttp.setRequestHeader('Authorization', 'Basic 9ajdu4xyn1ig8nxsodr3');
+    // xhttp.setRequestHeader('Authorization', 'Basic 9ajdu4xyn1ig8nxsodr3');
     xhttp.send();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -221,7 +221,7 @@ function checkMediaCSFDEpisode(id) {
 function checkCSFDList(url, movieList) {
     var xhttp = new XMLHttpRequest();
     xhttp.open("GET", url, true);
-    xhttp.setRequestHeader('Authorization', 'Basic 9ajdu4xyn1ig8nxsodr3');
+    // xhttp.setRequestHeader('Authorization', 'Basic 9ajdu4xyn1ig8nxsodr3');
     xhttp.send();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -266,7 +266,7 @@ function checkCSFDList(url, movieList) {
 function checkMediaIMDB(id, inEpisode) {
     var xhttp = new XMLHttpRequest();
     xhttp.open("GET", getServiceURL('imdb', id), true);
-    xhttp.setRequestHeader('Authorization', 'Basic 9ajdu4xyn1ig8nxsodr3');
+    // xhttp.setRequestHeader('Authorization', 'Basic 9ajdu4xyn1ig8nxsodr3');
     xhttp.send();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -307,7 +307,7 @@ function checkMediaIMDB(id, inEpisode) {
 function checkMediaTrakt(id) {
     var xhttp = new XMLHttpRequest();
     xhttp.open("GET", getServiceURL('slug', id), true);
-    xhttp.setRequestHeader('Authorization', 'Basic 9ajdu4xyn1ig8nxsodr3');
+    // xhttp.setRequestHeader('Authorization', 'Basic 9ajdu4xyn1ig8nxsodr3');
     xhttp.send();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -333,7 +333,7 @@ async function checkMediaTMDB(id, slug, type) {
     var xhttp = new XMLHttpRequest();
     var xhttp2 = new XMLHttpRequest();
     xhttp.open("GET", getServiceURL('slug', slug), true);
-    xhttp.setRequestHeader('Authorization', 'Basic 9ajdu4xyn1ig8nxsodr3');
+    // xhttp.setRequestHeader('Authorization', 'Basic 9ajdu4xyn1ig8nxsodr3');
     xhttp.send();
     var requestOK = false;
     xhttp.onreadystatechange = function() {
@@ -368,7 +368,7 @@ async function checkMediaTMDB(id, slug, type) {
     console.log('[SC2: after sleep]');
     
     xhttp2.open("GET", getServiceURL('tmdb', id), true);
-    xhttp2.setRequestHeader('Authorization', 'Basic 9ajdu4xyn1ig8nxsodr3');
+    // xhttp2.setRequestHeader('Authorization', 'Basic 9ajdu4xyn1ig8nxsodr3');
     xhttp2.send();
     xhttp2.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -446,13 +446,13 @@ function sc2Integrate() {
             var id = link.substring(indexStart, indexEnd);
             url = url + "&value=" + id;
         }
-        url = url + "?access_token=9ajdu4xyn1ig8nxsodr3"
+        url = url + "&access_token=9ajdu4xyn1ig8nxsodr3"
         checkCSFDList(url, movieList);
 
     } else if (href.indexOf('csfd.cz/zebricky/') > 0) {
         // csfd.cz - search
         movieList = document.getElementsByClassName('film');
-        url = "https://plugin.sc2.zone/api/media/filter/service?type=*&service=csfd&limit=300"
+        url = "https://plugin.sc2.zone/api/media/filter/service?type=*&service=csfd"
         for(let i = 0; i < movieList.length; i++) {
             item = movieList[i];
             el = item.childNodes[0];
@@ -463,7 +463,7 @@ function sc2Integrate() {
             id = link.substring(indexStart, indexEnd);
             url = url + "&value=" + id;
         }
-        url = url + "?access_token=9ajdu4xyn1ig8nxsodr3"
+        url = url + "&limit=300&access_token=9ajdu4xyn1ig8nxsodr3"
         checkCSFDList(url, movieList);
 
     } else if (href.indexOf('imdb.com') >0) {
