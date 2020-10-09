@@ -1,5 +1,6 @@
 3.5
 Authorization changed
+Repository moved to GitLab under SCC project group
 
 3.4
 YMovie link changed
